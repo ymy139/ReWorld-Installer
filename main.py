@@ -1,5 +1,6 @@
-from PySide6.QtGui import QFont, QFontDatabase
+from PySide6.QtGui import QFont, QFontDatabase, QPixmap
 from PySide6.QtWidgets import QWidget, QLabel, QApplication
+from PySide6.QtCore import Qt
 import qfluentwidgets
 import requests
 import sys
@@ -20,19 +21,36 @@ class Window(QWidget):
         self.setFont(QFont( QFontDatabase.applicationFontFamilies(
                                 QFontDatabase.addApplicationFont("./res/font/Source Han Sans CN Regular.ttf"))[0],
                             9))
+        self.resize(770, 410)
+        self.pageNum = 1
         
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 770, 410)
-        self.background.setPixmap("/res/img/bg.jpeg")
+        # TODO: The pixmap can't show now.
+        self.background.setPixmap(QPixmap("./res/img/bg.jpeg"))
         self.background.setScaledContents(True)
         
         self.nextButton = qfluentwidgets.PushButton("下一步", self)
         self.nextButton.setGeometry(630, 350, 120, 40)
-        self.nextButton.setFont(QFont(self.fontInfo().family()), 14)
+        self.nextButton.setFont(QFont(self.fontInfo().family(), 14))
+        
+        self.tipMassages = [
+            QLabel(self),
+            QLabel(self),
+            QLabel(self)
+        ]
+        for index in range(3):
+            self.tipMassages[index].setGeometry(10, (355+(15*index)), 360, 15)
+        self.tipMassages[0].setText("程序设计: ymy139")
+        self.tipMassages[1].setText("程序版本: 0.1.0   ReWorld整合包版本: 0.1.0")
+        self.tipMassages[2].setText("该程序遵循[GPLv3](https://www.gnu.org/licenses/gpl-3.0-standalone.html)许可证开源，您可以在[Github](https://github.com/ymy139/ReWorld-Installer)查看源码(需要VPN)")
+        self.tipMassages[2].setTextFormat(Qt.TextFormat.MarkdownText)
+        self.tipMassages[2].setOpenExternalLinks(True)
     
     def initUI_page1(self) -> None: ...
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = Window()
-    exit(app.exec_())
+    win.show()
+    exit(app.exec())
