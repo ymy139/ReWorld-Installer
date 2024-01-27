@@ -26,7 +26,7 @@ class Window(QWidget):
         self.setMaximumSize(770, 410)
         self.setWindowTitle("Re-World 安装程序")
         self.setWindowIcon(QPixmap("./res/img/icon.png"))
-        self.pageNum = 1
+        self.pageNum = 0
         
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 770, 410)
@@ -51,9 +51,13 @@ class Window(QWidget):
         self.tipMassages[2].setTextFormat(Qt.TextFormat.MarkdownText)
         self.tipMassages[2].setOpenExternalLinks(True)
     
-    def initUI_page1(self) -> None: ...
+    def initUI_page1(self) -> None:
+        
+        pass
     
-    def nextPage(self) -> None: print("Button clicked!")
+    def nextPage(self) -> None:
+        eval(f"self.initUI_page{self.pageNum+1}")
+        self.pageNum+=1
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
