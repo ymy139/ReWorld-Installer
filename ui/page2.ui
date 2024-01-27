@@ -95,6 +95,11 @@
      <height>15</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
    <property name="text">
     <string>该程序遵循[GPLv3](https://www.gnu.org/licenses/gpl-3.0-standalone.html)许可证开源，您可以在[Github](https://github.com/ymy139/ReWorld-Installer)查看源码(需要VPN)</string>
    </property>
@@ -104,8 +109,8 @@
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
-   <property name="textInteractionFlags">
-    <set>Qt::LinksAccessibleByMouse</set>
+   <property name="openExternalLinks">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label_5">
@@ -134,7 +139,7 @@
     </rect>
    </property>
    <property name="pixmap">
-    <pixmap>../../../游戏/MC/PCL/Pictures/9.jpeg</pixmap>
+    <pixmap>../../../游戏/MC/PCL/Pictures/3.jpeg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -159,19 +164,20 @@ p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;ReWorld 用户使用协议&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;ReWorld提醒您：抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#ff0004;&quot;&gt;本协议的订立、履行、解释及争议的解决均适用中华人民共和国法律并排除其他一切冲突法的适用。&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#ff0004;&quot;&gt;本协议订立于郑州市二七区。如双方就本协议的内容或其执行发生任何争议 (包括但不限于合同或者其他财产性权益纠纷) ，双方应友好协商解决；协商不成时，双方同意交由郑州市二七区人民法院管辖并处理。&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;1. 您需要保证您已详细阅读&lt;a href=&quot;https://www.minecraft.net/zh-hans/eula&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Mincraft最终用户许可协议&lt;/span&gt;&lt;/a&gt;与&lt;a href=&quot;https://www.microsoft.com/zh-cn/servicesagreement&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Microsoft 服务协议&lt;/span&gt;&lt;/a&gt;并保证遵循它们，如果出现任何有关上述协议导致的纠纷，ReWorld所有者不对此负责。&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2. 该安装程序遵循&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;GPLv3开源许可证&lt;/span&gt;&lt;/a&gt;在&lt;a href=&quot;https://github.com/ymy139/ReWorld-Installer&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;*开源，您可以随时&lt;a href=&quot;https://github.com/ymy139/ReWorld-Installer&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;查看源代码&lt;/span&gt;&lt;/a&gt;*并在&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;GPLv3许可证&lt;/span&gt;&lt;/a&gt;允许的条件下任意分发该软件的副本。&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3. ReWorld整合包遵循&lt;a href=&quot;https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans#main-content-marker&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;CC BY-NC-SA 4.0许可证&lt;/span&gt;&lt;/a&gt;分发，您可以在&lt;a href=&quot;https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans#main-content-marker&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;CC BY-NC-SA 4.0许可证&lt;/span&gt;&lt;/a&gt;允许的条件下任意分发该整合包的副本。&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;4. ReWorld整合包中包含许多其他作者制作的文件等 (例如&lt;a href=&quot;https://forums.minecraftforge.net/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Forge加载器&lt;/span&gt;&lt;/a&gt;)，这些文件遵循不同的许可证分发 (某些文件未定义使用哪些许可证分发)，ReWorld尊重这些作者以及他们的知识产权，如有侵权请联系删除。&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;*需要VPN&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI','Microsoft YaHei','PingFang SC'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:16pt;&quot;&gt;ReWorld 用户使用协议&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; font-weight:700;&quot;&gt;ReWorld提醒您：抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; color:#ff0004;&quot;&gt;本协议的订立、履行、解释及争议的解决均适用中华人民共和国法律并排除其他一切冲突法的适用。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; color:#ff0004;&quot;&gt;本协议订立于郑州市二七区。如双方就本协议的内容或其执行发生任何争议 (包括但不限于合同或者其他财产性权益纠纷) ，双方应友好协商解决；协商不成时，双方同意交由郑州市二七区人民法院管辖并处理。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;1. 您需要保证您已详细阅读&lt;/span&gt;&lt;a href=&quot;https://www.minecraft.net/zh-hans/eula&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;Mincraft最终用户许可协议&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;与&lt;/span&gt;&lt;a href=&quot;https://www.microsoft.com/zh-cn/servicesagreement&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;Microsoft 服务协议&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;并保证遵循它们，如果出现任何有关上述协议导致的纠纷，ReWorld所有者不对此负责。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;2. 该安装程序遵循&lt;/span&gt;&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;GPLv3开源许可证&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;在&lt;/span&gt;&lt;a href=&quot;https://github.com/ymy139/ReWorld-Installer&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;*开源，您可以随时&lt;/span&gt;&lt;a href=&quot;https://github.com/ymy139/ReWorld-Installer&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;查看源代码&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;*并在&lt;/span&gt;&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;GPLv3许可证&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;允许的条件下任意分发该软件的副本。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;3. ReWorld整合包遵循&lt;/span&gt;&lt;a href=&quot;https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans#main-content-marker&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;CC BY-NC-SA 4.0许可证&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;分发，您可以在&lt;/span&gt;&lt;a href=&quot;https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans#main-content-marker&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;CC BY-NC-SA 4.0许可证&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;允许的条件下任意分发该整合包的副本。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;4. ReWorld整合包中包含许多其他作者制作的文件等 (例如&lt;/span&gt;&lt;a href=&quot;https://forums.minecraftforge.net/&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;Forge加载器&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;)，这些文件遵循不同的许可证分发 (某些文件未定义使用哪些许可证分发)，ReWorld尊重这些作者以及他们的知识产权，如有侵权请联系删除。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt;&quot;&gt;5. ReWorld作者保留对以上条款的解释权，并有权随时对上述条例进行删除，添加以及更改&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'思源黑体 CN Regular'; font-size:9pt; font-style:italic;&quot;&gt;*需要VPN&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textInteractionFlags">
-    <set>Qt::LinksAccessibleByMouse</set>
+    <set>Qt::TextBrowserInteraction</set>
    </property>
   </widget>
   <widget class="CheckBox" name="CheckBox">

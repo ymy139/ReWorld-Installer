@@ -128,7 +128,7 @@
     </rect>
    </property>
    <property name="pixmap">
-    <pixmap>../../../游戏/MC/PCL/Pictures/9.jpeg</pixmap>
+    <pixmap>../../../游戏/MC/PCL/Pictures/3.jpeg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
