@@ -1,5 +1,5 @@
 from PySide6.QtGui import QFont, QFontDatabase, QPixmap
-from PySide6.QtWidgets import QWidget, QLabel, QApplication
+from PySide6.QtWidgets import QWidget, QLabel, QApplication, QPushButton
 from PySide6.QtCore import Qt
 import qfluentwidgets
 import requests
@@ -22,17 +22,21 @@ class Window(QWidget):
                                 QFontDatabase.addApplicationFont("./res/font/Source Han Sans CN Regular.ttf"))[0],
                             9))
         self.resize(770, 410)
+        self.setMinimumSize(770, 410)
+        self.setMaximumSize(770, 410)
+        self.setWindowTitle("Re-World 安装程序")
+        self.setWindowIcon(QPixmap("./res/img/icon.png"))
         self.pageNum = 1
         
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 770, 410)
-        # TODO: The pixmap can't show now.
-        self.background.setPixmap(QPixmap("./res/img/bg.jpeg"))
+        self.background.setPixmap(QPixmap(".//res/img/bg.png"))
         self.background.setScaledContents(True)
         
         self.nextButton = qfluentwidgets.PushButton("下一步", self)
         self.nextButton.setGeometry(630, 350, 120, 40)
         self.nextButton.setFont(QFont(self.fontInfo().family(), 14))
+        self.nextButton.clicked.connect(self.nextPage)
         
         self.tipMassages = [
             QLabel(self),
@@ -48,6 +52,8 @@ class Window(QWidget):
         self.tipMassages[2].setOpenExternalLinks(True)
     
     def initUI_page1(self) -> None: ...
+    
+    def nextPage(self) -> None: print("Button clicked!")
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)

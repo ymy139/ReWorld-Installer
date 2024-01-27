@@ -93,7 +93,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;该程序遵循&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0-standalone.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;GPLv3&lt;/span&gt;&lt;/a&gt;许可证开源，您可以在&lt;a href=&quot;https://github.com/ymy139/ReWorld-Installer&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;查看源码(需要VPN)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>该程序遵循[GPLv3](https://www.gnu.org/licenses/gpl-3.0-standalone.html)许可证开源，您可以在[Github](https://github.com/ymy139/ReWorld-Installer)查看源码(需要VPN)</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::MarkdownText</enum>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -124,9 +127,6 @@
      <height>410</height>
     </rect>
    </property>
-   <property name="text">
-    <string/>
-   </property>
    <property name="pixmap">
     <pixmap>../../../游戏/MC/PCL/Pictures/9.jpeg</pixmap>
    </property>
@@ -150,5 +150,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>PushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>689</x>
+     <y>369</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>204</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
