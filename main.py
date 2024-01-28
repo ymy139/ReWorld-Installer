@@ -1,12 +1,21 @@
+import sys
+__consoleOut__ = sys.stdout
+__consoleErr__ = sys.stderr
+sys.stdout = open("out.log", "w")
+sys.stderr = sys.stdout
+
 from PySide6.QtGui import QFont, QFontDatabase, QPixmap
-from PySide6.QtWidgets import QWidget, QLabel, QApplication, QGroupBox
+from PySide6.QtWidgets import QWidget, QLabel, QApplication, QGroupBox, QFileDialog
 from PySide6.QtCore import Qt
-from qfluentwidgets import PushButton, TextEdit, CheckBox, LineEdit
+from qfluentwidgets import PushButton, TextEdit, CheckBox, LineEdit, PasswordLineEdit, IconInfoBadge, FluentIcon, ProgressBar
 from psutil._common import bytes2human
 import psutil
-import sys
 import os
+import threading
+import paramiko
 
+installPath = "."
+eula: str
 REWORLD_SIZE = 630
 PCL2_SIZE = 13
 RESPACK_SIZE = 36
@@ -14,12 +23,13 @@ IS_DEV = True
 if IS_DEV:
     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
 else:
-    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = ".\PySide6\plugins\platforms"
+    pass
 
 class Window(QWidget):
     def __init__(self) -> None:
         super().__init__()
-        self.MAX_PAGE_NUM = 3
+        self.setupMultiThread()
+        self.MAX_PAGE_NUM = 4
         self.initUI()
         
     def initUI(self) -> None:
@@ -76,7 +86,7 @@ class Window(QWidget):
         self.eulaBox = TextEdit(self)
         self.eulaBox.setGeometry(20, 90, 730, 230)
         self.eulaBox.setReadOnly(True)
-        self.eulaBox.setText(open("./res/docs/eula.html", "r", encoding="utf-8").read())
+        self.eulaBox.setText(eula)
         self.eulaBox.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse     | 
                                              Qt.TextInteractionFlag.LinksAccessibleByMouse    | 
                                              Qt.TextInteractionFlag.LinksAccessibleByKeyboard |
@@ -105,17 +115,19 @@ class Window(QWidget):
         self.installItme_ReWorld = CheckBox(self.installItme)
         self.installItme_ReWorld.setGeometry(10, 20, 530, 22)
         self.installItme_ReWorld.setChecked(True)
-        self.installItme_ReWorld.setText(f"ReWorld整合包 (包含Mod文件，配置文件，Minecraft可再分发文件) - {REWORLD_SIZE}MB")
+        self.installItme_ReWorld.setText(f"ReWorld整合包 (包含Mod文件，配置文件，Minecraft可再分发文件) - {REWORLD_SIZE}M")
         self.installItme_ReWorld.stateChanged.connect(self.recalculateSize)
         self.installItme_ReWorld.show()
         self.installItme_PCL2 = CheckBox(self.installItme)
         self.installItme_PCL2.setGeometry(10, 45, 450, 22)
         self.installItme_PCL2.setChecked(True)
-        self.installItme_PCL2.setText(f"PCL2启动器 (包含启动器，启动器配置文件，教程) - {PCL2_SIZE}MB")
+        self.installItme_PCL2.setText(f"PCL2启动器 (包含启动器，启动器配置文件，教程) - {PCL2_SIZE}M")
+        self.installItme_PCL2.stateChanged.connect(self.recalculateSize)
         self.installItme_PCL2.show()
         self.installItme_resPack = CheckBox(self.installItme)
         self.installItme_resPack.setGeometry(10, 70, 450, 22)
-        self.installItme_resPack.setText(f"美化资源包 (包含提前打包好的材质，光影) - {RESPACK_SIZE}MB")
+        self.installItme_resPack.setText(f"美化资源包 (包含提前打包好的材质，光影) - {RESPACK_SIZE}M")
+        self.installItme_resPack.stateChanged.connect(self.recalculateSize)
         self.installItme_resPack.show()
         
         self.installPath = QGroupBox(self)
@@ -131,11 +143,12 @@ class Window(QWidget):
         self.installPath_find = PushButton(self.installPath)
         self.installPath_find.setGeometry(655, 20, 65, 33)
         self.installPath_find.setText("选择...")
+        self.installPath_find.clicked.connect(self.findInsiallPath)
         self.installPath_find.show()
         self.installPath_spaceTip = QLabel(self.installPath)
         self.installPath_spaceTip.setGeometry(10, 55, 710, 15)
         self.installPath_spaceTip.setFont(QFont(self.fontInfo().family(), 9))
-        self.installPath_spaceTip.setText(f"需要拥有{REWORLD_SIZE + PCL2_SIZE}MB的空闲空间，当前位置有{bytes2human(psutil.disk_usage(list(os.path.abspath('.'))[0]+':').free)}B的空闲空间")
+        self.installPath_spaceTip.setText(f"需要拥有{REWORLD_SIZE + PCL2_SIZE}M的空闲空间，当前位置有{bytes2human(psutil.disk_usage(list(os.path.abspath('.'))[0]+':').free)}的空闲空间")
         self.installPath_spaceTip.show()
         
         self.remoteServerConfig = QGroupBox(self)
@@ -154,9 +167,62 @@ class Window(QWidget):
         self.remoteServerConfig_password_tip.setGeometry(445, 25, 70, 20)
         self.remoteServerConfig_password_tip.setText("链接密码：")
         self.remoteServerConfig_password_tip.show()
-        self.remoteServerConfig_password_input = LineEdit(self.remoteServerConfig)
+        self.remoteServerConfig_password_input = PasswordLineEdit(self.remoteServerConfig)
         self.remoteServerConfig_password_input.setGeometry(520, 20, 200, 33)
         self.remoteServerConfig_password_input.show()
+        
+        self.pageNum += 1
+    
+    def initUI_page4(self) -> None:
+        self.installItme.close()
+        self.installPath.close()
+        self.remoteServerConfig.close()
+        
+        self.stepTip.setText("正在下载并安装，请稍后...")
+        
+        self.downloadStep_icon = IconInfoBadge(self)
+        self.downloadStep_icon.setIcon(FluentIcon.MORE)
+        self.downloadStep_icon.move(20, 85)
+        self.downloadStep_icon.show()
+        self.downloadStep_text = QLabel(self)
+        self.downloadStep_text.setGeometry(45, 85, 100, 15)
+        self.downloadStep_text.setText("下载资源")
+        self.downloadStep_text.show()
+        
+        self.checkRes_icon = IconInfoBadge(self)
+        self.checkRes_icon.setIcon(FluentIcon.QUESTION)
+        self.checkRes_icon.move(20, 106)
+        self.checkRes_icon.show()
+        self.checkRes_text = QLabel(self)
+        self.checkRes_text.setGeometry(45, 106, 100, 15)
+        self.checkRes_text.setText("校验资源完整性")
+        self.checkRes_text.show()
+        
+        self.unpackRes_icon = IconInfoBadge(self)
+        self.unpackRes_icon.setIcon(FluentIcon.QUESTION)
+        self.unpackRes_icon.move(20, 127)
+        self.unpackRes_icon.show()
+        self.unpackRes_text = QLabel(self)
+        self.unpackRes_text.setGeometry(45, 127, 100, 15)
+        self.unpackRes_text.setText("解压资源并安装")
+        self.unpackRes_text.show()
+        
+        self.nowDoing_stepTip = QLabel(self)
+        self.nowDoing_stepTip.setText("正在下载资源...")
+        self.nowDoing_stepTip.setGeometry(20, 305, 150, 15)
+        self.nowDoing_stepTip.show()
+        self.nowDoing_progressBar = ProgressBar(self)
+        self.nowDoing_progressBar.setGeometry(20, 325, 690, 4)
+        self.nowDoing_progressBar.show()
+        self.nowDoing_progressTip = QLabel(self)
+        self.nowDoing_progressTip.setText("0%")
+        self.nowDoing_progressTip.setGeometry(20, 330, 30, 15)
+        self.nowDoing_progressTip.show()
+        self.nowDoing_spendTip = QLabel(self)
+        self.nowDoing_spendTip.setText("0B/s")
+        self.nowDoing_spendTip.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignHCenter)
+        self.nowDoing_spendTip.setGeometry(610, 330, 100, 15)
+        self.nowDoing_spendTip.show()
         
         self.pageNum += 1
     
@@ -169,9 +235,47 @@ class Window(QWidget):
             QApplication.exit(0)
 
     def recalculateSize(self) -> None:
+        newSize = 0
+        if self.installItme_PCL2.isChecked():
+            newSize += PCL2_SIZE
+        if self.installItme_ReWorld.isChecked():
+            newSize += REWORLD_SIZE
+        if self.installItme_resPack.isChecked():
+            newSize += RESPACK_SIZE
+        
+        if self.installPath_display.text() == "":
+            self.installPath_spaceTip.setText(f"需要拥有{newSize}M的空闲空间，当前位置有{bytes2human(psutil.disk_usage(list(os.path.abspath('.'))[0]+':').free)}的空闲空间")
+        else:
+            self.installPath_spaceTip.setText(f"需要拥有{newSize}M的空闲空间，当前位置有{bytes2human(psutil.disk_usage(list(self.installPath_display.text())[0]+':').free)}的空闲空间")
+    
+    def findInsiallPath(self) -> None:
+        dirName = QFileDialog.getExistingDirectory(self, "选择安装位置...", ".")
+        self.installPath_display.setText(dirName)
+        global installPath
+        installPath = dirName
+    
+    def setupMultiThread(self):
+        def getEula() -> None:
+            global eula
+            eulaFile = open("./res/docs/eula.html", "r")
+            eula = eulaFile.read()
+            eulaFile.close()
+            return None
+        def downloadRes() -> None:
+            transport = paramiko.Transport((self.remoteServerConfig_server_input.text(),
+                                            self.remoteServerConfig_password_input.text()))
+            transport.connect()
+            sftpClient = paramiko.SFTPClient.from_transport(transport)
+            # TODO: downlaod logic
+        # TODO: init Multi-Thread
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = Window()
     win.show()
-    exit(app.exec())
+    winExitCode = app.exec()
+    sys.stdout.close()
+    sys.stdout = __consoleOut__
+    sys.stderr = __consoleErr__
+    os.remove("out.log")
+    exit(winExitCode)
