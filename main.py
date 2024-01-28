@@ -86,7 +86,7 @@ class Window(QWidget):
         self.eulaBox = TextEdit(self)
         self.eulaBox.setGeometry(20, 90, 730, 230)
         self.eulaBox.setReadOnly(True)
-        self.eulaBox.setText(eula)
+        self.eulaBox.setText(open("./res/docs/eula.html", "r", encoding="utf-8").read())
         self.eulaBox.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse     | 
                                              Qt.TextInteractionFlag.LinksAccessibleByMouse    | 
                                              Qt.TextInteractionFlag.LinksAccessibleByKeyboard |
@@ -255,12 +255,6 @@ class Window(QWidget):
         installPath = dirName
     
     def setupMultiThread(self):
-        def getEula() -> None:
-            global eula
-            eulaFile = open("./res/docs/eula.html", "r")
-            eula = eulaFile.read()
-            eulaFile.close()
-            return None
         def downloadRes() -> None:
             transport = paramiko.Transport((self.remoteServerConfig_server_input.text(),
                                             self.remoteServerConfig_password_input.text()))
