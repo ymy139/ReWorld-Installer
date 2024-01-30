@@ -5,7 +5,7 @@ sys.stdout = open("out.log", "w")
 sys.stderr = sys.stdout
 
 from PySide6.QtGui import QFont, QFontDatabase, QPixmap
-from PySide6.QtWidgets import QWidget, QLabel, QApplication, QGroupBox, QFileDialog
+from PySide6.QtWidgets import QWidget, QLabel, QApplication, QGroupBox, QFileDialog, QMessageBox
 from PySide6.QtCore import Qt
 from qfluentwidgets import PushButton, TextEdit, CheckBox, LineEdit, PasswordLineEdit, IconInfoBadge, FluentIcon, ProgressBar
 from psutil._common import bytes2human
@@ -23,7 +23,7 @@ IS_DEV = True
 if IS_DEV:
     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
 else:
-    pass
+    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "\PySide6\plugins\platforms"
 
 class Window(QWidget):
     def __init__(self) -> None:
@@ -258,10 +258,30 @@ class Window(QWidget):
         def downloadRes() -> None:
             transport = paramiko.Transport((self.remoteServerConfig_server_input.text(),
                                             self.remoteServerConfig_password_input.text()))
-            transport.connect()
+            try:
+                transport.connect()
+            except:
+                QMessageBox.warning(self, "Error!", "远程服务器参数错误！", )
+                QApplication.exit(1)
             sftpClient = paramiko.SFTPClient.from_transport(transport)
-            # TODO: downlaod logic
-        # TODO: init Multi-Thread
+            if self.installItme_ReWorld.isChecked():
+                sftpClient.get("/client/ReWorld.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.zip"), self.sftpCallback)
+                sftpClient.get("/client/ReWorld.sha256", str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.sha256"), self.sftpCallback)
+            
+            if self.installItme_PCL2.isChecked():
+                sftpClient.get("/client/PCL2.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"), self.sftpCallback)
+                sftpClient.get("/client/PCL2.sha256", str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.sha256"), self.sftpCallback)
+            
+            if self.installItme_resPack.isChecked():
+                sftpClient.get("/client/resPack.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"), self.sftpCallback)
+                sftpClient.get("/client/resPack.sha256", str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.sha256"), self.sftpCallback)
+        self.downloadThread = threading.Thread(target = downloadRes,
+                                               name = "downloadThread",
+                                               daemon = True)
+        
+    def sftpCallback(self, transferred: int, total: int):
+        pass
+        # TODO: callback logic
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
