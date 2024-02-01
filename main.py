@@ -19,7 +19,6 @@ installPath = "."
 eula: str
 REWORLD_SIZE = 251
 PCL2_SIZE = 102
-RESPACK_SIZE = 139
 IS_DEV = True
 if IS_DEV:
     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
@@ -243,8 +242,6 @@ class Window(QWidget):
             newSize += PCL2_SIZE
         if self.installItme_ReWorld.isChecked():
             newSize += REWORLD_SIZE
-        if self.installItme_resPack.isChecked():
-            newSize += RESPACK_SIZE
         
         if self.installPath_display.text() == "":
             self.installPath_spaceTip.setText(f"需要拥有{newSize}M的空闲空间，当前位置有{bytes2human(psutil.disk_usage(list(os.path.abspath('.'))[0]+':').free)}的空闲空间")
