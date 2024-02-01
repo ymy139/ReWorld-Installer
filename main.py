@@ -237,7 +237,7 @@ class Window(QWidget):
     def nextPage(self) -> None:
         if self.pageNum != self.MAX_PAGE_NUM and self.pageNum < self.MAX_PAGE_NUM:
             getattr(self, f"initUI_page{(self.pageNum + 1)}")()
-            if self.pageNum == (self.MAX_PAGE_NUM - 1):
+            if self.pageNum == (self.MAX_PAGE_NUM):
                 self.nextButton.setText("完成")
         else:
             QApplication.exit(0)
@@ -298,23 +298,24 @@ class Window(QWidget):
             if self.installItme_ReWorld.isChecked():
                 file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.zip"))
                 if self.installPath_display.text() == "":
-                    file.extractall()
+                    extractall(file)
                 else:
-                    file.extractall(self.installPath_display.text())
+                    extractall(file, self.installPath_display.text())
             if self.installItme_PCL2.isChecked():
                 file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"))
                 if self.installPath_display.text() == "":
-                    file.extractall()
+                    extractall(file)
                 else:
-                    file.extractall(self.installPath_display.text())
+                    extractall(file, self.installPath_display.text())
             if self.installItme_resPack.isChecked():
                 file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"))
                 if self.installPath_display.text() == "":
-                    file.extractall()
+                    extractall(file)
                 else:
-                    file.extractall(self.installPath_display.text())
+                    extractall(file, self.installPath_display.text())
             self.unpackRes_icon.setIcon(FluentIcon.ACCEPT)
             self.nowDoing_stepTip.setText("已完成")
+            self.nextButton.setEnabled(True)
             self.nowDoing_progressBar_indeterminate.close()
             
         self.downloadThread = threading.Thread(target = downloadRes,
@@ -327,6 +328,18 @@ class Window(QWidget):
     def sftpCallback(self, transferred: int, total: int) -> None:
         self.nowDoing_progressTip.setText(str(int((transferred / total) * 100))+"%")
         self.nowDoing_progressBar.setVal((transferred / total) * 100)
+        
+def extractall(zip_file: zipfile.ZipFile, extractPath):
+    zipFileList = zip_file.namelist()
+    for f in zipFileList:
+        zip_file.extract(f, extractPath)
+        name1 = os.path.join(extractPath, f)
+        name2 = os.path.join(extractPath, recode(f))
+        os.rename(name1, name2)
+    zip_file.close()
+def recode(raw: str) -> str:
+    try: return raw.encode('cp437').decode('gbk')
+    except: return raw.encode('utf-8').decode('utf-8')
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
