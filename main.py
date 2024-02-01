@@ -19,11 +19,11 @@ installPath = "."
 eula: str
 REWORLD_SIZE = 251
 PCL2_SIZE = 102
-# IS_DEV = True
-# if IS_DEV:
-#     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
-# else:
-#     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "\PySide6\plugins\platforms"
+IS_DEV = True
+if IS_DEV:
+    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
+else:
+    pass
 
 def pyi_res_path(path: str) -> str:
     return os.path.normpath(os.path.split(__file__)[0]+path)
