@@ -125,11 +125,6 @@ class Window(QWidget):
         self.installItme_PCL2.setText(f"PCL2启动器 (包含启动器，启动器配置文件，运行库) - {PCL2_SIZE}M")
         self.installItme_PCL2.stateChanged.connect(self.recalculateSize)
         self.installItme_PCL2.show()
-        self.installItme_resPack = CheckBox(self.installItme)
-        self.installItme_resPack.setGeometry(10, 70, 450, 22)
-        self.installItme_resPack.setText(f"美化资源包 (包含提前打包好的材质，光影) - {RESPACK_SIZE}M")
-        self.installItme_resPack.stateChanged.connect(self.recalculateSize)
-        self.installItme_resPack.show()
         
         self.installPath = QGroupBox(self)
         self.installPath.setGeometry(20, 195, 730, 75)
@@ -282,10 +277,6 @@ class Window(QWidget):
             if self.installItme_PCL2.isChecked():
                 self.nowDoing_stepTip.setText("正在下载PCL2...")
                 sftpClient.get("/client/PCL2.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"), self.sftpCallback)
-            
-            if self.installItme_resPack.isChecked():
-                self.nowDoing_stepTip.setText("正在下载美化资源包...")
-                sftpClient.get("/client/resPack.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"), self.sftpCallback)
                 
             self.downloadStep_icon.setIcon(FluentIcon.ACCEPT)
             self.nowDoing_progressTip.close()
@@ -303,12 +294,6 @@ class Window(QWidget):
                     extractall(file, self.installPath_display.text())
             if self.installItme_PCL2.isChecked():
                 file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"))
-                if self.installPath_display.text() == "":
-                    extractall(file)
-                else:
-                    extractall(file, self.installPath_display.text())
-            if self.installItme_resPack.isChecked():
-                file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"))
                 if self.installPath_display.text() == "":
                     extractall(file)
                 else:
