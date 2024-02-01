@@ -198,9 +198,9 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>610</x>
+     <x>460</x>
      <y>330</y>
-     <width>100</width>
+     <width>250</width>
      <height>15</height>
     </rect>
    </property>
@@ -211,21 +211,11 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="IconInfoBadge" name="IconInfoBadge_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>106</y>
-     <width>16</width>
-     <height>16</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="IconInfoBadge" name="IconInfoBadge_3">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>127</y>
+     <y>106</y>
      <width>16</width>
      <height>16</height>
     </rect>
@@ -244,24 +234,11 @@
     <string>下载资源</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_11">
-   <property name="geometry">
-    <rect>
-     <x>45</x>
-     <y>106</y>
-     <width>100</width>
-     <height>15</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>校验资源完整性</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_12">
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>127</y>
+     <y>106</y>
      <width>100</width>
      <height>15</height>
     </rect>
@@ -282,10 +259,8 @@
   <zorder>label_7</zorder>
   <zorder>label_8</zorder>
   <zorder>label_9</zorder>
-  <zorder>IconInfoBadge_2</zorder>
   <zorder>IconInfoBadge_3</zorder>
   <zorder>label_10</zorder>
-  <zorder>label_11</zorder>
   <zorder>label_12</zorder>
  </widget>
  <customwidgets>

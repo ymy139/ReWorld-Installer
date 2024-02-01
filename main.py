@@ -13,7 +13,7 @@ import psutil
 import os
 import threading
 import paramiko
-import hashlib
+import zipfile
 
 installPath = "."
 eula: str
@@ -30,7 +30,7 @@ class Window(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.setupMultiThread()
-        self.MAX_PAGE_NUM = 4
+        self.MAX_PAGE_NUM = 5
         self.timer = QTimer(self)
         self.timer.timeout.connect(QApplication.processEvents)
         self.initUI()
@@ -193,21 +193,12 @@ class Window(QWidget):
         self.downloadStep_text.setText("下载资源")
         self.downloadStep_text.show()
         
-        self.checkRes_icon = IconInfoBadge(self)
-        self.checkRes_icon.setIcon(FluentIcon.QUESTION)
-        self.checkRes_icon.move(20, 106)
-        self.checkRes_icon.show()
-        self.checkRes_text = QLabel(self)
-        self.checkRes_text.setGeometry(45, 106, 100, 15)
-        self.checkRes_text.setText("校验资源完整性")
-        self.checkRes_text.show()
-        
         self.unpackRes_icon = IconInfoBadge(self)
         self.unpackRes_icon.setIcon(FluentIcon.QUESTION)
-        self.unpackRes_icon.move(20, 127)
+        self.unpackRes_icon.move(20, 106)
         self.unpackRes_icon.show()
         self.unpackRes_text = QLabel(self)
-        self.unpackRes_text.setGeometry(45, 127, 100, 15)
+        self.unpackRes_text.setGeometry(45, 106, 100, 15)
         self.unpackRes_text.setText("解压资源并安装")
         self.unpackRes_text.show()
         
@@ -233,6 +224,19 @@ class Window(QWidget):
         self.downloadThread.start()
         
         self.pageNum += 1
+        
+    def initUI_page5(self) -> None:
+        self.downloadStep_icon.close()
+        self.downloadStep_text.close()
+        self.unpackRes_text.close()
+        self.unpackRes_icon.close()
+        self.nowDoing_stepTip.close()
+        self.nowDoing_progressBar.close()
+        self.nowDoing_progressBar_indeterminate.close()
+        self.nowDoing_progressTip.close()
+        self.nowDoing_spendTip.close()
+        
+        self.stepTip.setText("安装完成，感谢使用本程序！")
     
     def nextPage(self) -> None:
         if self.pageNum != self.MAX_PAGE_NUM and self.pageNum < self.MAX_PAGE_NUM:
@@ -286,9 +290,29 @@ class Window(QWidget):
                 self.nowDoing_stepTip.setText("正在下载美化资源包...")
                 sftpClient.get("/client/resPack.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"), self.sftpCallback)
                 
+            self.downloadStep_icon.setIcon(FluentIcon.ACCEPT)
+            self.extractThread.start()
+                
         def extractRes() -> None:
-            pass
-            # TODO: extract logic
+            if self.installItme_ReWorld.isChecked():
+                file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.zip"))
+                if self.installPath_display.text() == "":
+                    file.extractall()
+                else:
+                    file.extractall(self.installPath_display.text())
+            if self.installItme_PCL2.isChecked():
+                file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"))
+                if self.installPath_display.text() == "":
+                    file.extractall()
+                else:
+                    file.extractall(self.installPath_display.text())
+            if self.installItme_resPack.isChecked():
+                file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"))
+                if self.installPath_display.text() == "":
+                    file.extractall()
+                else:
+                    file.extractall(self.installPath_display.text())
+            self.unpackRes_icon.setIcon(FluentIcon.ACCEPT)
             
         self.downloadThread = threading.Thread(target = downloadRes,
                                                name = "downloadThread",
