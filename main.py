@@ -6,13 +6,14 @@ sys.stderr = sys.stdout
 
 from PySide6.QtGui import QFont, QFontDatabase, QPixmap
 from PySide6.QtWidgets import QWidget, QLabel, QApplication, QGroupBox, QFileDialog, QMessageBox
-from PySide6.QtCore import Qt
-from qfluentwidgets import PushButton, TextEdit, CheckBox, LineEdit, PasswordLineEdit, IconInfoBadge, FluentIcon, ProgressBar
+from PySide6.QtCore import Qt, QTimer
+from qfluentwidgets import PushButton, TextEdit, CheckBox, LineEdit, PasswordLineEdit, IconInfoBadge, FluentIcon, ProgressBar, IndeterminateProgressBar
 from psutil._common import bytes2human
 import psutil
 import os
 import threading
 import paramiko
+import hashlib
 
 installPath = "."
 eula: str
@@ -30,7 +31,10 @@ class Window(QWidget):
         super().__init__()
         self.setupMultiThread()
         self.MAX_PAGE_NUM = 4
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(QApplication.processEvents)
         self.initUI()
+        self.timer.start(200)
         
     def initUI(self) -> None:
         self.setFont(QFont( QFontDatabase.applicationFontFamilies(
@@ -208,21 +212,25 @@ class Window(QWidget):
         self.unpackRes_text.show()
         
         self.nowDoing_stepTip = QLabel(self)
-        self.nowDoing_stepTip.setText("正在下载资源...")
+        self.nowDoing_stepTip.setText("正在准备下载资源...")
         self.nowDoing_stepTip.setGeometry(20, 305, 150, 15)
         self.nowDoing_stepTip.show()
         self.nowDoing_progressBar = ProgressBar(self)
         self.nowDoing_progressBar.setGeometry(20, 325, 690, 4)
         self.nowDoing_progressBar.show()
+        self.nowDoing_progressBar_indeterminate = IndeterminateProgressBar(self)
+        self.nowDoing_progressBar_indeterminate.setGeometry(20, 325, 690, 4)
         self.nowDoing_progressTip = QLabel(self)
         self.nowDoing_progressTip.setText("0%")
         self.nowDoing_progressTip.setGeometry(20, 330, 30, 15)
         self.nowDoing_progressTip.show()
         self.nowDoing_spendTip = QLabel(self)
-        self.nowDoing_spendTip.setText("0B/s")
+        self.nowDoing_spendTip.setText("0B/0B")
         self.nowDoing_spendTip.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignHCenter)
         self.nowDoing_spendTip.setGeometry(610, 330, 100, 15)
         self.nowDoing_spendTip.show()
+        
+        self.downloadThread.start()
         
         self.pageNum += 1
     
@@ -259,29 +267,38 @@ class Window(QWidget):
             transport = paramiko.Transport((self.remoteServerConfig_server_input.text(),
                                             self.remoteServerConfig_password_input.text()))
             try:
-                transport.connect()
+                transport.connect(username = "",
+                                  password = "")
             except:
                 QMessageBox.warning(self, "Error!", "远程服务器参数错误！", )
                 QApplication.exit(1)
             sftpClient = paramiko.SFTPClient.from_transport(transport)
+            
             if self.installItme_ReWorld.isChecked():
+                self.nowDoing_stepTip.setText("正在下载ReWorld...")
                 sftpClient.get("/client/ReWorld.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.zip"), self.sftpCallback)
-                sftpClient.get("/client/ReWorld.sha256", str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.sha256"), self.sftpCallback)
             
             if self.installItme_PCL2.isChecked():
+                self.nowDoing_stepTip.setText("正在下载PCL2...")
                 sftpClient.get("/client/PCL2.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"), self.sftpCallback)
-                sftpClient.get("/client/PCL2.sha256", str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.sha256"), self.sftpCallback)
             
             if self.installItme_resPack.isChecked():
+                self.nowDoing_stepTip.setText("正在下载美化资源包...")
                 sftpClient.get("/client/resPack.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"), self.sftpCallback)
-                sftpClient.get("/client/resPack.sha256", str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.sha256"), self.sftpCallback)
+                
+        def extractRes() -> None:
+            pass
+            # TODO: extract logic
+            
         self.downloadThread = threading.Thread(target = downloadRes,
                                                name = "downloadThread",
                                                daemon = True)
+        self.extractThread = threading.Thread(target = extractRes,
+                                               name = "extractThread",
+                                               daemon = True)
         
-    def sftpCallback(self, transferred: int, total: int):
-        pass
-        # TODO: callback logic
+    def sftpCallback(self, transferred: int, total: int) -> None:
+        self.nowDoing_progressBar.setValue(int((transferred / total) * 100))
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
