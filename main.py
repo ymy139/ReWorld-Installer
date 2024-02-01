@@ -17,9 +17,9 @@ import zipfile
 
 installPath = "."
 eula: str
-REWORLD_SIZE = 630
-PCL2_SIZE = 13
-RESPACK_SIZE = 36
+REWORLD_SIZE = 251
+PCL2_SIZE = 102
+RESPACK_SIZE = 139
 IS_DEV = True
 if IS_DEV:
     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
@@ -31,10 +31,7 @@ class Window(QWidget):
         super().__init__()
         self.setupMultiThread()
         self.MAX_PAGE_NUM = 5
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(QApplication.processEvents)
         self.initUI()
-        self.timer.start(200)
         
     def initUI(self) -> None:
         self.setFont(QFont( QFontDatabase.applicationFontFamilies(
@@ -86,7 +83,7 @@ class Window(QWidget):
         self.pageNum += 1
         
     def initUI_page2(self) -> None:
-        self.stepTip.setText("安装ReWorld前需要您阅读用户隐私收集及使用协议")
+        self.stepTip.setText("安装ReWorld前需要您阅读用户使用协议")
         self.eulaBox = TextEdit(self)
         self.eulaBox.setGeometry(20, 90, 730, 230)
         self.eulaBox.setReadOnly(True)
@@ -125,7 +122,7 @@ class Window(QWidget):
         self.installItme_PCL2 = CheckBox(self.installItme)
         self.installItme_PCL2.setGeometry(10, 45, 450, 22)
         self.installItme_PCL2.setChecked(True)
-        self.installItme_PCL2.setText(f"PCL2启动器 (包含启动器，启动器配置文件，教程) - {PCL2_SIZE}M")
+        self.installItme_PCL2.setText(f"PCL2启动器 (包含启动器，启动器配置文件，运行库) - {PCL2_SIZE}M")
         self.installItme_PCL2.stateChanged.connect(self.recalculateSize)
         self.installItme_PCL2.show()
         self.installItme_resPack = CheckBox(self.installItme)
@@ -213,13 +210,11 @@ class Window(QWidget):
         self.nowDoing_progressBar_indeterminate.setGeometry(20, 325, 690, 4)
         self.nowDoing_progressTip = QLabel(self)
         self.nowDoing_progressTip.setText("0%")
-        self.nowDoing_progressTip.setGeometry(20, 330, 30, 15)
+        self.nowDoing_progressTip.setGeometry(680, 305, 30, 15)
+        self.nowDoing_progressTip.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignHCenter)
         self.nowDoing_progressTip.show()
-        self.nowDoing_spendTip = QLabel(self)
-        self.nowDoing_spendTip.setText("0B/0B")
-        self.nowDoing_spendTip.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignHCenter)
-        self.nowDoing_spendTip.setGeometry(610, 330, 100, 15)
-        self.nowDoing_spendTip.show()
+        
+        self.nextButton.setEnabled(False)
         
         self.downloadThread.start()
         
@@ -234,14 +229,15 @@ class Window(QWidget):
         self.nowDoing_progressBar.close()
         self.nowDoing_progressBar_indeterminate.close()
         self.nowDoing_progressTip.close()
-        self.nowDoing_spendTip.close()
+
+        self.pageNum += 1
         
         self.stepTip.setText("安装完成，感谢使用本程序！")
     
     def nextPage(self) -> None:
         if self.pageNum != self.MAX_PAGE_NUM and self.pageNum < self.MAX_PAGE_NUM:
             getattr(self, f"initUI_page{(self.pageNum + 1)}")()
-            if self.pageNum == self.MAX_PAGE_NUM:
+            if self.pageNum == (self.MAX_PAGE_NUM - 1):
                 self.nextButton.setText("完成")
         else:
             QApplication.exit(0)
@@ -269,15 +265,16 @@ class Window(QWidget):
     def setupMultiThread(self):
         def downloadRes() -> None:
             transport = paramiko.Transport((self.remoteServerConfig_server_input.text(),
-                                            self.remoteServerConfig_password_input.text()))
+                                            2053))
             try:
-                transport.connect(username = "",
-                                  password = "")
+                transport.connect(username = "sfe1952609.bc1c5fb6",
+                                  password = self.remoteServerConfig_password_input.text())
             except:
                 QMessageBox.warning(self, "Error!", "远程服务器参数错误！", )
                 QApplication.exit(1)
             sftpClient = paramiko.SFTPClient.from_transport(transport)
-            
+            if not os.path.exists(str(os.environ["temp"] + "\\ReWorld-Installer\\")):
+                os.mkdir(str(os.environ["temp"] + "\\ReWorld-Installer\\"))
             if self.installItme_ReWorld.isChecked():
                 self.nowDoing_stepTip.setText("正在下载ReWorld...")
                 sftpClient.get("/client/ReWorld.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.zip"), self.sftpCallback)
@@ -291,9 +288,13 @@ class Window(QWidget):
                 sftpClient.get("/client/resPack.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\resPack.zip"), self.sftpCallback)
                 
             self.downloadStep_icon.setIcon(FluentIcon.ACCEPT)
+            self.nowDoing_progressTip.close()
             self.extractThread.start()
                 
         def extractRes() -> None:
+            self.nowDoing_stepTip.setText("正在解压资源...")
+            self.nowDoing_progressBar.close()
+            self.nowDoing_progressBar_indeterminate.show()
             if self.installItme_ReWorld.isChecked():
                 file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.zip"))
                 if self.installPath_display.text() == "":
@@ -313,6 +314,8 @@ class Window(QWidget):
                 else:
                     file.extractall(self.installPath_display.text())
             self.unpackRes_icon.setIcon(FluentIcon.ACCEPT)
+            self.nowDoing_stepTip.setText("已完成")
+            self.nowDoing_progressBar_indeterminate.close()
             
         self.downloadThread = threading.Thread(target = downloadRes,
                                                name = "downloadThread",
@@ -322,7 +325,8 @@ class Window(QWidget):
                                                daemon = True)
         
     def sftpCallback(self, transferred: int, total: int) -> None:
-        self.nowDoing_progressBar.setValue(int((transferred / total) * 100))
+        self.nowDoing_progressTip.setText(str(int((transferred / total) * 100))+"%")
+        self.nowDoing_progressBar.setVal((transferred / total) * 100)
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
