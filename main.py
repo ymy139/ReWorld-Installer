@@ -19,11 +19,14 @@ installPath = "."
 eula: str
 REWORLD_SIZE = 251
 PCL2_SIZE = 102
-IS_DEV = True
-if IS_DEV:
-    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
-else:
-    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "\PySide6\plugins\platforms"
+# IS_DEV = True
+# if IS_DEV:
+#     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "D:\项目\ReWorld-Installer\.venv\Lib\site-packages\PySide6\plugins\platforms"
+# else:
+#     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = "\PySide6\plugins\platforms"
+
+def pyi_res_path(path: str) -> str:
+    return os.path.normpath(os.path.split(__file__)[0]+path)
 
 class Window(QWidget):
     def __init__(self) -> None:
@@ -33,19 +36,20 @@ class Window(QWidget):
         self.initUI()
         
     def initUI(self) -> None:
-        self.setFont(QFont( QFontDatabase.applicationFontFamilies(
-                                QFontDatabase.addApplicationFont("./res/font/Source Han Sans CN Regular.ttf"))[0],
+        self.setFont(QFont(QFontDatabase.applicationFontFamilies(
+                                QFontDatabase.addApplicationFont(
+                                    pyi_res_path("/res/font/Source Han Sans CN Regular.ttf")))[0],
                             9))
         self.resize(770, 410)
         self.setMinimumSize(770, 410)
         self.setMaximumSize(770, 410)
         self.setWindowTitle("Re-World 安装程序")
-        self.setWindowIcon(QPixmap("./res/img/icon.png"))
+        self.setWindowIcon(QPixmap(pyi_res_path("/res/img/icon.png")))
         self.pageNum = 0
         
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 770, 410)
-        self.background.setPixmap(QPixmap(".//res/img/bg.png"))
+        self.background.setPixmap(QPixmap(pyi_res_path("/res/img/bg.png")))
         self.background.setScaledContents(True)
         
         self.nextButton = PushButton("下一步", self)
@@ -86,7 +90,7 @@ class Window(QWidget):
         self.eulaBox = TextEdit(self)
         self.eulaBox.setGeometry(20, 90, 730, 230)
         self.eulaBox.setReadOnly(True)
-        self.eulaBox.setText(open("./res/docs/eula.html", "r", encoding="utf-8").read())
+        self.eulaBox.setText(open(pyi_res_path("/res/docs/eula.html"), "r", encoding="utf-8").read())
         self.eulaBox.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse     | 
                                              Qt.TextInteractionFlag.LinksAccessibleByMouse    | 
                                              Qt.TextInteractionFlag.LinksAccessibleByKeyboard |
@@ -276,6 +280,7 @@ class Window(QWidget):
                 sftpClient.get("/client/PCL2.zip", str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"), self.sftpCallback)
                 
             self.downloadStep_icon.setIcon(FluentIcon.ACCEPT)
+            self.unpackRes_icon.setIcon(FluentIcon.MORE)
             self.nowDoing_progressTip.close()
             self.extractThread.start()
                 
@@ -286,13 +291,13 @@ class Window(QWidget):
             if self.installItme_ReWorld.isChecked():
                 file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\ReWorld.zip"))
                 if self.installPath_display.text() == "":
-                    extractall(file)
+                    extractall(file, os.getcwd())
                 else:
                     extractall(file, self.installPath_display.text())
             if self.installItme_PCL2.isChecked():
                 file = zipfile.ZipFile(str(os.environ["temp"] + "\\ReWorld-Installer\\PCL2.zip"))
                 if self.installPath_display.text() == "":
-                    extractall(file)
+                    extractall(file, os.getcwd())
                 else:
                     extractall(file, self.installPath_display.text())
             self.unpackRes_icon.setIcon(FluentIcon.ACCEPT)
@@ -332,4 +337,4 @@ if __name__ == "__main__":
     sys.stdout = __consoleOut__
     sys.stderr = __consoleErr__
     os.remove("out.log")
-    exit(winExitCode)
+    sys.exit(winExitCode)
