@@ -6,7 +6,7 @@ sys.stderr = sys.stdout
 
 from PySide6.QtGui import QFont, QFontDatabase, QPixmap
 from PySide6.QtWidgets import QWidget, QLabel, QApplication, QGroupBox, QFileDialog, QMessageBox
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt
 from qfluentwidgets import PushButton, TextEdit, CheckBox, LineEdit, PasswordLineEdit, IconInfoBadge, FluentIcon, ProgressBar, IndeterminateProgressBar
 from psutil._common import bytes2human
 import psutil
