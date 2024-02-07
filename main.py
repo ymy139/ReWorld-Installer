@@ -316,7 +316,9 @@ class Window(QWidget):
         self.nowDoing_progressTip.setText(str(int((transferred / total) * 100))+"%")
         self.nowDoing_progressBar.setVal((transferred / total) * 100)
         
-def extractall(zip_file: zipfile.ZipFile, extractPath):
+def extractall(zip_file: zipfile.ZipFile, extractPath: os.PathLike):
+    if os.path.exists(extractPath):
+        os.system("del /S "+extractPath)
     zipFileList = zip_file.namelist()
     for f in zipFileList:
         zip_file.extract(f, extractPath)
